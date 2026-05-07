@@ -11,7 +11,7 @@ from hybrid import HybridRecommender
 from evaluation import full_evaluation
 from posters import get_poster_url, get_posters_parallel, PLACEHOLDER
 
-st.set_page_config(page_title="CineMatch AI", page_icon="🎬", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="MovieMind AI", page_icon="🎬", layout="wide", initial_sidebar_state="expanded")
 
 # ─── PREMIUM CSS ───
 st.markdown("""
@@ -42,6 +42,15 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif !important; }
         radial-gradient(ellipse 60% 50% at 90% 100%, rgba(6,182,212,0.06) 0%, transparent 50%);
 }
 
+/* Remove default Streamlit top/bottom gaps */
+.block-container {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+    max-width: 1400px !important;
+}
+
 /* Sidebar */
 section[data-testid="stSidebar"] {
     background: linear-gradient(180deg, rgba(15,15,25,0.95) 0%, rgba(10,10,18,0.98) 100%) !important;
@@ -57,40 +66,58 @@ section[data-testid="stSidebar"] .stMarkdown h3 {
 }
 
 /* Hero */
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+@keyframes floatBadge {
+    0% { transform: translateY(0px); box-shadow: 0 0 15px rgba(168,85,247,0.1); }
+    50% { transform: translateY(-3px); box-shadow: 0 5px 25px rgba(168,85,247,0.3); }
+    100% { transform: translateY(0px); box-shadow: 0 0 15px rgba(168,85,247,0.1); }
+}
 .hero-container {
     text-align: center;
-    padding: 2.5rem 1rem 1rem;
+    padding: 3rem 1rem 1.5rem;
+    position: relative;
+    z-index: 10;
 }
 .hero-badge {
     display: inline-block;
     background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(6,182,212,0.15));
-    border: 1px solid rgba(168,85,247,0.25);
+    border: 1px solid rgba(168,85,247,0.3);
     border-radius: 50px;
-    padding: 6px 18px;
+    padding: 6px 20px;
     font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 1px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
     color: var(--accent-purple);
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
+    animation: floatBadge 4s ease-in-out infinite;
+    backdrop-filter: blur(5px);
 }
 .hero-title {
     font-family: 'Space Grotesk', sans-serif !important;
-    font-size: 3rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #f1f5f9 0%, #a855f7 50%, #06b6d4 100%);
+    font-size: 3.5rem;
+    font-weight: 900;
+    background: linear-gradient(-45deg, #f1f5f9, #a855f7, #06b6d4, #f1f5f9);
+    background-size: 300% 300%;
+    animation: gradientBG 8s ease infinite;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     line-height: 1.1;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
 }
 .hero-sub {
     color: var(--text-secondary);
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 300;
-    max-width: 600px;
+    max-width: 650px;
     margin: 0 auto;
+    line-height: 1.6;
 }
 
 /* Section headers */
@@ -119,6 +146,7 @@ section[data-testid="stSidebar"] .stMarkdown h3 {
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 20px;
     padding: 0;
+    margin-bottom: 30px;
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
@@ -248,6 +276,7 @@ section[data-testid="stSidebar"] .stMarkdown h3 {
     border: 1px solid rgba(255,255,255,0.05);
     border-radius: 14px;
     padding: 0;
+    margin-bottom: 24px;
     text-align: center;
     transition: all 0.3s ease;
     backdrop-filter: blur(8px);
@@ -365,16 +394,34 @@ except Exception as e:
 # ─── SIDEBAR ───
 with st.sidebar:
     st.markdown("""
-    <div style="text-align:center; padding: 1.5rem 0 0.5rem;">
-        <div style="font-size:2.5rem;">🎬</div>
-        <div style="font-family:'Space Grotesk',sans-serif; font-size:1.3rem; font-weight:800;
-            background:linear-gradient(135deg,#a855f7,#06b6d4);
-            -webkit-background-clip:text; -webkit-text-fill-color:transparent;">CineMatch AI</div>
-        <div style="color:#64748b; font-size:0.7rem; letter-spacing:1px; text-transform:uppercase; margin-top:4px;">Hybrid Engine v2.0</div>
+    <div style="text-align:center; padding: 1rem 0 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 1.5rem;">
+        <div style="
+            width: 70px; height: 70px; 
+            background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(6,182,212,0.15));
+            border: 1px solid rgba(168,85,247,0.3);
+            border-radius: 22px; 
+            margin: 0 auto 1.2rem; 
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 8px 32px rgba(168,85,247,0.2), inset 0 0 15px rgba(255,255,255,0.05);
+            transform: rotate(-6deg);
+            backdrop-filter: blur(10px);
+        ">
+            <span style="font-size: 2.2rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); transform: rotate(6deg);">🔮</span>
+        </div>
+        <div style="font-family:'Space Grotesk',sans-serif; font-size:1.6rem; font-weight:900; letter-spacing: -0.5px;
+            background:linear-gradient(135deg, #ffffff 20%, #a855f7 60%, #06b6d4 100%);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">MovieMind AI</div>
+        <div style="color:#94a3b8; font-size:0.65rem; font-weight: 700; letter-spacing:2.5px; text-transform:uppercase; margin-top:8px;">Hybrid Engine 2.0</div>
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("### 👤 User Profile")
+    st.markdown("""
+    <div style="margin-top: 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
+        <span style="background: rgba(168,85,247,0.15); padding: 4px 8px; border-radius: 6px; font-size: 1rem;">👤</span>
+        <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #f1f5f9; letter-spacing: 0.5px;">User Profile</span>
+    </div>
+    """, unsafe_allow_html=True)
     user_list = sorted(users_df['user_id'].unique())
     selected_user = st.selectbox("Select User", user_list, index=0, label_visibility="collapsed")
 
@@ -384,56 +431,124 @@ with st.sidebar:
     fav_movies = user_history[user_history['rating'] >= 4]
 
     st.markdown(f"""
-    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06);
-        border-radius:12px; padding:14px; margin:0.5rem 0;">
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-            <span style="color:#64748b; font-size:0.75rem;">Movies Rated</span>
-            <span style="color:#f1f5f9; font-weight:700;">{total_rated}</span>
+    <div style="
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(168,85,247,0.15);
+        border-radius: 14px;
+        padding: 16px;
+        margin: 0.8rem 0 1.5rem;
+        box-shadow: inset 0 0 20px rgba(168,85,247,0.05);
+        backdrop-filter: blur(10px);
+        transition: transform 0.3s ease, border-color 0.3s ease;
+    ">
+        <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom:12px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+            <span style="color:#94a3b8; font-size:0.75rem; font-weight: 600; text-transform: uppercase;">Movies Rated</span>
+            <span style="color:#f1f5f9; font-weight:800; font-size: 1.1rem;">{total_rated}</span>
         </div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-            <span style="color:#64748b; font-size:0.75rem;">Avg Rating</span>
-            <span style="color:#fbbf24; font-weight:700;">{'⭐' * int(round(avg_rating))} {avg_rating:.1f}</span>
+        <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom:12px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+            <span style="color:#94a3b8; font-size:0.75rem; font-weight: 600; text-transform: uppercase;">Avg Rating</span>
+            <span style="color:#fbbf24; font-weight:800; text-shadow: 0 0 10px rgba(251,191,36,0.2);">{'⭐' * int(round(avg_rating))} {avg_rating:.1f}</span>
         </div>
-        <div style="display:flex; justify-content:space-between;">
-            <span style="color:#64748b; font-size:0.75rem;">Loved Movies</span>
-            <span style="color:#ec4899; font-weight:700;">{len(fav_movies)}</span>
+        <div style="display:flex; justify-content:space-between; align-items: center;">
+            <span style="color:#94a3b8; font-size:0.75rem; font-weight: 600; text-transform: uppercase;">Loved Movies</span>
+            <span style="color:#ec4899; font-weight:800; font-size: 1.1rem; text-shadow: 0 0 10px rgba(236,72,153,0.3);">{len(fav_movies)}</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("### 🎛️ Engine Tuning")
+    st.markdown("""
+    <div style="margin-top: 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
+        <span style="background: rgba(6,182,212,0.15); padding: 4px 8px; border-radius: 6px; font-size: 1rem;">🎛️</span>
+        <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #f1f5f9; letter-spacing: 0.5px;">Engine Tuning</span>
+    </div>
+    """, unsafe_allow_html=True)
     cb_weight = st.slider("Content-Based Weight", 0.0, 1.0, 0.4, 0.05)
     cf_weight = round(1.0 - cb_weight, 2)
     st.caption(f"Collaborative Weight: **{cf_weight}**")
 
     top_n = st.slider("Recommendations", 5, 20, 10)
 
-    st.markdown("### 📊 Model Stats")
+    st.markdown("""
+    <div style="margin-top: 2rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
+        <span style="background: rgba(16,185,129,0.15); padding: 4px 8px; border-radius: 6px; font-size: 1rem;">📊</span>
+        <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #f1f5f9; letter-spacing: 0.5px;">Model Stats</span>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown(f"""
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-        <div style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.15);
-            border-radius:10px; padding:10px; text-align:center;">
-            <div style="color:#64748b; font-size:0.6rem; text-transform:uppercase; letter-spacing:1px;">RMSE</div>
-            <div style="color:#10b981; font-size:1.1rem; font-weight:800; font-family:'Space Grotesk';">{eval_metrics['RMSE']:.3f}</div>
+    <style>
+    .stat-box {{
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 12px;
+        padding: 12px;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }}
+    .stat-box::before {{
+        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+    }}
+    .stat-box:hover {{ transform: translateY(-3px); background: rgba(255,255,255,0.04); }}
+    .stat-box.green::before {{ background: #10b981; box-shadow: 0 0 10px #10b981; }}
+    .stat-box.cyan::before {{ background: #06b6d4; box-shadow: 0 0 10px #06b6d4; }}
+    .stat-box.purple::before {{ background: #a855f7; box-shadow: 0 0 10px #a855f7; }}
+    .stat-box.pink::before {{ background: #ec4899; box-shadow: 0 0 10px #ec4899; }}
+    </style>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom: 1rem;">
+        <div class="stat-box green">
+            <div style="color:#94a3b8; font-size:0.65rem; font-weight:600; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">RMSE</div>
+            <div style="color:#10b981; font-size:1.2rem; font-weight:800; font-family:'Space Grotesk';">{eval_metrics['RMSE']:.3f}</div>
         </div>
-        <div style="background:rgba(6,182,212,0.08); border:1px solid rgba(6,182,212,0.15);
-            border-radius:10px; padding:10px; text-align:center;">
-            <div style="color:#64748b; font-size:0.6rem; text-transform:uppercase; letter-spacing:1px;">MAE</div>
-            <div style="color:#06b6d4; font-size:1.1rem; font-weight:800; font-family:'Space Grotesk';">{eval_metrics['MAE']:.3f}</div>
+        <div class="stat-box cyan">
+            <div style="color:#94a3b8; font-size:0.65rem; font-weight:600; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">MAE</div>
+            <div style="color:#06b6d4; font-size:1.2rem; font-weight:800; font-family:'Space Grotesk';">{eval_metrics['MAE']:.3f}</div>
         </div>
-        <div style="background:rgba(168,85,247,0.08); border:1px solid rgba(168,85,247,0.15);
-            border-radius:10px; padding:10px; text-align:center;">
-            <div style="color:#64748b; font-size:0.6rem; text-transform:uppercase; letter-spacing:1px;">F1</div>
-            <div style="color:#a855f7; font-size:1.1rem; font-weight:800; font-family:'Space Grotesk';">{eval_metrics['F1-Score']:.3f}</div>
+        <div class="stat-box purple">
+            <div style="color:#94a3b8; font-size:0.65rem; font-weight:600; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">F1 Score</div>
+            <div style="color:#a855f7; font-size:1.2rem; font-weight:800; font-family:'Space Grotesk';">{eval_metrics['F1-Score']:.3f}</div>
         </div>
-        <div style="background:rgba(236,72,153,0.08); border:1px solid rgba(236,72,153,0.15);
-            border-radius:10px; padding:10px; text-align:center;">
-            <div style="color:#64748b; font-size:0.6rem; text-transform:uppercase; letter-spacing:1px;">Precision</div>
-            <div style="color:#ec4899; font-size:1.1rem; font-weight:800; font-family:'Space Grotesk';">{eval_metrics['Precision']:.3f}</div>
+        <div class="stat-box pink">
+            <div style="color:#94a3b8; font-size:0.65rem; font-weight:600; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Precision</div>
+            <div style="color:#ec4899; font-size:1.2rem; font-weight:800; font-family:'Space Grotesk';">{eval_metrics['Precision']:.3f}</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
+    st.markdown("""
+    <div style="margin-top: 2rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
+        <span style="background: rgba(236,72,153,0.15); padding: 4px 8px; border-radius: 6px; font-size: 1rem;">⚙️</span>
+        <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #f1f5f9; letter-spacing: 0.5px;">Data Preprocessing</span>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    with st.expander("🔴 Before (Raw CSV Data)"):
+        st.markdown("<p style='color:#64748b; font-size:0.75rem;'>Raw unformatted data from source.</p>", unsafe_allow_html=True)
+        try:
+            raw_movies = pd.read_csv("data2/movies.csv")
+            st.markdown(f"""
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#94a3b8; margin-bottom:10px; background:rgba(255,255,255,0.02); padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.05);">
+                <span>Rows: <strong style="color:#f1f5f9;">{len(raw_movies)}</strong></span>
+                <span>Missing: <strong style="color:#ec4899;">{raw_movies.isna().sum().sum()}</strong></span>
+                <span>Duplicates: <strong style="color:#ec4899;">{raw_movies.duplicated().sum()}</strong></span>
+            </div>
+            """, unsafe_allow_html=True)
+            st.dataframe(raw_movies, use_container_width=True, height=250, hide_index=True)
+        except:
+            st.info("Raw data file not accessible.")
+            
+    with st.expander("🟢 After (Engineered Data)"):
+        st.markdown("<p style='color:#64748b; font-size:0.75rem;'>Cleaned data with TMDB ID mappings.</p>", unsafe_allow_html=True)
+        processed_sample = movies_df[['movie_id', 'title', 'genres', 'tmdb_id']]
+        st.markdown(f"""
+        <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#94a3b8; margin-bottom:10px; background:rgba(255,255,255,0.02); padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.05);">
+            <span>Rows: <strong style="color:#f1f5f9;">{len(processed_sample)}</strong></span>
+            <span>Missing: <strong style="color:#10b981;">{processed_sample.isna().sum().sum()}</strong></span>
+            <span>Duplicates: <strong style="color:#10b981;">{processed_sample.duplicated().sum()}</strong></span>
+        </div>
+        """, unsafe_allow_html=True)
+        st.dataframe(processed_sample, use_container_width=True, height=250, hide_index=True)
 
 # ─── HERO ───
 st.markdown("""
@@ -629,10 +744,41 @@ st.markdown(metrics_html, unsafe_allow_html=True)
 
 # ─── FOOTER ───
 st.markdown("""
-<div style="text-align:center; padding:3rem 0 2rem; border-top:1px solid rgba(255,255,255,0.04); margin-top:3rem;">
-    <div style="color:#64748b; font-size:0.75rem; letter-spacing:0.5px;">
-        Built with ❤️ using <strong style="color:#a855f7;">Content-Based</strong> + <strong style="color:#06b6d4;">Collaborative</strong> Filtering
+<div style="
+    text-align: center; 
+    padding: 3rem 0; 
+    margin-top: 4rem;
+    position: relative;
+">
+    <div style="
+        position: absolute;
+        top: 0; left: 20%; right: 20%; height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(168,85,247,0.4), transparent);
+    "></div>
+    <div style="
+        position: absolute;
+        top: 0; left: 40%; right: 40%; height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(6,182,212,0.5), transparent);
+        box-shadow: 0 0 20px rgba(6,182,212,0.5);
+    "></div>
+    <div style="
+        display: inline-block;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 20px;
+        padding: 1.5rem 3rem;
+        backdrop-filter: blur(10px);
+    ">
+        <div style="color: #f1f5f9; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 8px;">
+            Built with ❤️ using <strong style="color: #a855f7; text-shadow: 0 0 10px rgba(168,85,247,0.3);">Content-Based</strong> + <strong style="color: #06b6d4; text-shadow: 0 0 10px rgba(6,182,212,0.3);">Collaborative</strong> Filtering
+        </div>
+        <div style="color: #64748b; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <span>MovieMind AI</span>
+            <span style="width: 4px; height: 4px; border-radius: 50%; background: #475569;"></span>
+            <span>Hybrid Recommendation Engine</span>
+            <span style="width: 4px; height: 4px; border-radius: 50%; background: #475569;"></span>
+            <span>MovieLens Dataset</span>
+        </div>
     </div>
-    <div style="color:#475569; font-size:0.65rem; margin-top:4px;">CineMatch AI • Hybrid Recommendation Engine • MovieLens Dataset</div>
 </div>
 """, unsafe_allow_html=True)
