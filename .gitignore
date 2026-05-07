@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+venv/
+env/
+.venv/
+.streamlit/
+*.DS_Store
+# Keep data2 folder but ignore potential large temporary files if any
+data/poster_cache.json
